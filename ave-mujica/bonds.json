@@ -168,5 +168,36 @@
     "「可部署干员数量上限+1」 = deployCap +1 at 4 members (×2 at 5; the player's deploy cap defaults to 8; placement.js enforces it)"
    ]
   }
+ },
+ "skillfulShip": {
+  "bondId": "skillfulShip",
+  "members": [
+   "chess_char_5_31_a",
+   "chess_ws_dos_lin_a"
+  ],
+  "visibleMembers": [
+   "chess_char_5_31_a",
+   "chess_ws_dos_lin_a"
+  ]
+ },
+ "miraShip": {
+  "bondId": "miraShip",
+  "members": [
+   "chess_char_6_30_a",
+   "chess_ws_col_heyak_a"
+  ],
+  "visibleMembers": [
+   "chess_char_6_30_a",
+   "chess_ws_col_heyak_a"
+  ]
+ },
+ "soloShip": {
+  "bondId": "soloShip",
+  "members": [
+   "chess_char_5_32_a"
+  ],
+  "visibleMembers": [
+   "chess_char_5_32_a"
+  ]
  }
 }

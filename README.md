@@ -15,4 +15,4 @@ Community mod packs for the unofficial Arknights *Stronghold Protocol: Covenant*
 
 ## 更新说明
 
-见 [`CHANGELOG-v1.1.0.md`](CHANGELOG-v1.1.0.md)；下载包见 [Releases](../../releases)。
+见 [`CHANGELOG-v1.2.0.md`](CHANGELOG-v1.2.0.md)；下载包见 [Releases](../../releases)。
