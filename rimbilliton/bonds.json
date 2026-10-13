@@ -261,7 +261,8 @@
    "chess_char_5_10_a",
    "chess_char_5_20_a",
    "chess_char_6_18_a",
-   "chess_char_6_21_a"
+   "chess_char_6_21_a",
+   "chess_char_5_32_a"
   ],
   "visibleMembers": [
    "chess_char_1_07_a",
@@ -274,7 +275,8 @@
    "chess_char_5_10_a",
    "chess_char_5_20_a",
    "chess_char_6_18_a",
-   "chess_char_6_21_a"
+   "chess_char_6_21_a",
+   "chess_char_5_32_a"
   ],
   "spec": {
    "tiers": [
@@ -387,7 +389,9 @@
    "chess_char_6_05_a",
    "chess_char_6_08_a",
    "chess_char_6_12_a",
-   "chess_char_5_24_a"
+   "chess_char_5_24_a",
+   "chess_ws_dos_holungday_a",
+   "chess_ws_col_jesca_a"
   ],
   "visibleMembers": [
    "chess_char_1_09_a",
@@ -402,7 +406,9 @@
    "chess_char_6_05_a",
    "chess_char_6_08_a",
    "chess_char_6_12_a",
-   "chess_char_5_24_a"
+   "chess_char_5_24_a",
+   "chess_ws_dos_holungday_a",
+   "chess_ws_col_jesca_a"
   ],
   "spec": {
    "tiers": [
@@ -523,7 +529,8 @@
    "chess_char_5_12_a",
    "chess_char_6_02_a",
    "chess_char_6_16_a",
-   "chess_char_4_27_a"
+   "chess_char_4_27_a",
+   "chess_ws_col_aphris_a"
   ],
   "visibleMembers": [
    "chess_char_1_17_a",
@@ -535,7 +542,8 @@
    "chess_char_5_12_a",
    "chess_char_6_02_a",
    "chess_char_6_16_a",
-   "chess_char_4_27_a"
+   "chess_char_4_27_a",
+   "chess_ws_col_aphris_a"
   ],
   "spec": {
    "tiers": [
@@ -657,7 +665,8 @@
    "chess_char_4_01_a",
    "chess_char_5_11_a",
    "chess_char_6_03_a",
-   "chess_char_6_22_a"
+   "chess_char_6_22_a",
+   "chess_ws_col_jesca_a"
   ],
   "visibleMembers": [
    "chess_char_1_02_a",
@@ -670,7 +679,8 @@
    "chess_char_4_01_a",
    "chess_char_5_11_a",
    "chess_char_6_03_a",
-   "chess_char_6_22_a"
+   "chess_char_6_22_a",
+   "chess_ws_col_jesca_a"
   ],
   "spec": {
    "tiers": [
@@ -791,7 +801,10 @@
    "chess_char_5_16_a",
    "chess_char_6_14_a",
    "chess_char_6_20_a",
-   "chess_char_2_21_a"
+   "chess_char_2_21_a",
+   "chess_char_5_30_a",
+   "chess_ws_col_nasti_a",
+   "chess_ws_col_ceylon_a"
   ],
   "visibleMembers": [
    "chess_char_1_06_a",
@@ -802,7 +815,10 @@
    "chess_char_4_24_a",
    "chess_char_6_14_a",
    "chess_char_6_20_a",
-   "chess_char_2_21_a"
+   "chess_char_2_21_a",
+   "chess_char_5_30_a",
+   "chess_ws_col_nasti_a",
+   "chess_ws_col_ceylon_a"
   ],
   "spec": {
    "tiers": [
@@ -1031,7 +1047,8 @@
    "chess_char_5_06_a",
    "chess_char_5_13_a",
    "chess_char_6_06_a",
-   "chess_char_5_25_a"
+   "chess_char_5_25_a",
+   "chess_ws_dos_crow_a"
   ],
   "visibleMembers": [
    "chess_char_1_20_a",
@@ -1041,7 +1058,8 @@
    "chess_char_5_06_a",
    "chess_char_5_13_a",
    "chess_char_6_06_a",
-   "chess_char_5_25_a"
+   "chess_char_5_25_a",
+   "chess_ws_dos_crow_a"
   ],
   "spec": {
    "tiers": [

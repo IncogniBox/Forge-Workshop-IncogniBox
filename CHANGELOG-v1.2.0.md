@@ -2,7 +2,7 @@
 
 发布日期：2026-10-13
 
-本次发布：**颂乐人偶 / Ave Mujica**（`ave-mujica` → **1.2.0**）。
+本次发布涵盖两个 mod：**颂乐人偶 / Ave Mujica** 与 **雷姆必拓 / Rim Billiton**（均 → **1.2.0**）。
 
 ---
 
@@ -42,6 +42,35 @@
 
 ---
 
+## 雷姆必拓 / Rim Billiton
+
+### 新增 · 四套时装
+`pack.json` 声明 `skins`（立绘 / 头像 / 前后 Spine 模型）：
+
+| 时装 | 干员 | 系列 |
+| --- | --- | --- |
+| 破冰 | 霜叶 | 斗争血脉 |
+| 又一年秋季 | 暴行 | 忒斯特收藏 |
+| 洇灵雨 | 滑行者 | 0011制造 |
+| 寰宇独奏 | 阿米娅（医疗） | 忒斯特收藏 |
+
+### 干员
+- **黑** 追加盟约【哥伦比亚】（`bonds` 增加 `columbiaShip`，原有【雷姆必拓】【远见】保留）。
+
+### 官方盟约名册
+- 把本包与其它 mod 的干员并进 **6 条官方盟约**的成员名册（让这些 mod 干员在自身拥有的盟约里也显示出来）：
+  `siracusaShip`（叙拉古）/ `preciShip`（精准）/ `arcaneShip`（奥术）/ `steadShip`（坚守）/ `deputShip`（助力）/ `indomShip`（不屈）。
+  本包是这几条盟约名册的**唯一主人**，所以其它包的 mod 干员也由本包一并列。
+
+### 包结构（0.2.4 起）
+- 补齐包内服务端模块：`battle/main.mjs`（盟约 installer + 特质 installer/reader + 装备行为）与 `meta/main.mjs`（「开拓大地」策略 + 3 个休整期特质处理器）；
+- 补上召唤物 kit `kits/token_10034_ray_sndbst.js`（沙地兽：不攻击 / 无敌 / 禁疗，走官方召唤物 kit 通道）；
+- `pack.json` 新增 `combat: true`、`stripDiyOverlaps: true`（把本包做成棋子的干员从自选编队池摘除）与 `server.battle` / `server.meta`；
+- 盟约图标由 `art.bonds` 改走顶层 `bondIcons`；
+- 附带本包 README（内容与引擎扩展点清单）。
+
+---
+
 ## 安装
 
-解压后将 `ave-mujica/` 文件夹整体放入游戏的工坊目录即可。
+解压后将 `ave-mujica/` 或 `rimbilliton/` 文件夹整体放入游戏的工坊目录即可。
