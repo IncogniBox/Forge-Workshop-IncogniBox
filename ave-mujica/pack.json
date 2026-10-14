@@ -5,7 +5,7 @@
  "author": "the Ave Mujica mod",
  "license": "GPL-3.0-or-later",
  "description": "颂乐人偶/Ave Mujica 核心盟约 mod：5 名成员干员（丰川祥子/三角初华/祐天寺若麦/八幡海铃/若叶睦）、成员特质（攻击/停顿/凋亡损伤/Fever 翻倍/25%效果共享）、5 层人数羁绊（刷新发放/休整期层数/资金/部署位/效果翻倍）。Fever 按 5 位成员「毋畏X」特质各自的增量逐条接线（数值取各自 chess 记录的 bb）；另有客户端面板在战场上给每名成员贴一个连音符样式的 Fever 积攒进度图标。与雷姆必拓 mod 兼容：若叶睦为双盟约成员。",
- "gameVersion": "0.2.2",
+ "gameVersion": "0.2.6",
  "combat": true,
  "server": {
   "battle": {
@@ -510,6 +510,7 @@
       ],
       "anims": {
        "idle": "Idle",
+       "deploy": "Start",
        "attack": {
         "begin": null,
         "loop": "Attack",
@@ -520,19 +521,21 @@
         "begin": null,
         "loop": "Skill_1",
         "end": null,
-        "via": "attack",
         "index": 0,
         "idle": null
        },
-       "die": null,
+       "die": "Doll_Die",
        "move": null,
-       "stun": null,
+       "stun": {
+        "begin": null,
+        "loop": "Stun",
+        "end": null
+       },
        "skills": {
         "0": {
          "begin": null,
          "loop": "Skill_1",
          "end": null,
-         "via": "attack",
          "index": 0,
          "idle": null
         },
@@ -540,8 +543,15 @@
          "begin": null,
          "loop": "Skill_2",
          "end": null,
-         "via": "attack",
          "index": 1,
+         "idle": null
+        },
+        "2": {
+         "begin": null,
+         "loop": "Attack",
+         "end": null,
+         "via": "attack",
+         "index": 2,
          "idle": null
         }
        }
@@ -555,6 +565,7 @@
       ],
       "anims": {
        "idle": "Idle",
+       "deploy": "Start",
        "attack": {
         "begin": null,
         "loop": "Attack",
@@ -565,7 +576,6 @@
         "begin": null,
         "loop": "Skill_1",
         "end": null,
-        "via": "attack",
         "index": 0,
         "idle": null
        },
@@ -577,7 +587,6 @@
          "begin": null,
          "loop": "Skill_1",
          "end": null,
-         "via": "attack",
          "index": 0,
          "idle": null
         },
@@ -585,8 +594,15 @@
          "begin": null,
          "loop": "Skill_2",
          "end": null,
-         "via": "attack",
          "index": 1,
+         "idle": null
+        },
+        "2": {
+         "begin": null,
+         "loop": "Attack",
+         "end": null,
+         "via": "attack",
+         "index": 2,
          "idle": null
         }
        }

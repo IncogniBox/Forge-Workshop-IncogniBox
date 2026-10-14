@@ -9,7 +9,7 @@
 玩起来：集齐 5 名成员把盟约铺满 5 层，成员不断用普通攻击给团队 Fever 充能，满 450 触发 20 秒 Fever 状态，
 期间成员近乎无视技力持续开技能；5 人成型时「所有效果翻倍」——攻速/停顿/凋亡损伤/资金/部署位全面拉满。
 
-- `gameVersion`：**0.2.2**（`pack.json`）。
+- `gameVersion`：**0.2.6**（`pack.json`）。
 - **前置依赖：无。** 它的盟约 `bondType` 是 **`SEASON`**、`isCore: true`，是**核心盟约**（不是 `SIDE_STORY`），
   既不需要也不走 `workshop/side-story` 的那套接口。与 `workshop/rimbilliton`（雷姆必拓）**兼容**：若叶睦同时带
   `rimBilliton` 盟约，两包各自把自己那条盟约算进 5 人判定，互不覆盖（本包 `overrides` 为空）。
@@ -61,8 +61,8 @@
 | 档 | 需要的成员数 | 效果 |
 |---|---|---|
 | 1 | 1 | 每刷新 **9** 次，获得 1 名阶级不超过调度中心的随机【颂乐人偶】干员（5 人时每 4 次） |
-| 2 | 2 | **休整期结束时**，场上每有 1 名成员，使**所有已激活盟约**层数 +1（5 人时 +2） |
-| 3 | 3 | 成员获得特质「进入休整期时额外获得 **1** 资金（最多 3 次）」 |
+| 2 | 2 | **休整期结束时**，场上每有 1 名**不重复的**成员，使**所有已激活盟约**层数 +1（5 人时 +2） |
+| 3 | 3 | 成员获得特质「进入休整期时额外获得 **1** 资金」，该效果最多生效 **2** 名成员 |
 | 4 | 4 | 可部署干员数量上限 **+1**（5 人时 +2） |
 | 5 | 5 | 【颂乐人偶】**所有效果翻倍**（`dblOf = tier>=5 ? 2 : 1`） |
 
@@ -70,11 +70,11 @@
 
 | 成员 | 效果 | 取值（`base` + `per_stack`×层数，5 人再 ×2） |
 |---|---|---|
-| 祐天寺若麦 Amoris | 成员**攻击力**提升 | `amoris_atk 0.25` + `amoris_atk_per 0.0025`/层 |
-| 八幡海铃 Timoris | 成员攻击命中时概率**停顿** | `timoris_prob 0.25` + `timoris_prob_per 0.0005`/层，停顿 `timoris_dur 1` 秒 |
-| 若叶睦 Mortis | 成员攻击附带**凋亡损伤** | `mortis_pct 0.25` + `mortis_pct_per 0.0005`/层 × 攻击力 |
+| 祐天寺若麦 Amoris | 成员**攻击力**提升 | `amoris_atk 0.25` + `amoris_atk_per 0.001`/层 |
+| 八幡海铃 Timoris | 成员攻击命中时概率**停顿** | `timoris_prob 0.2` + `timoris_prob_per 0.0005`/层，停顿 `timoris_dur 1` 秒 |
+| 若叶睦 Mortis | 成员攻击附带**凋亡损伤** | `mortis_pct 0.1` + `mortis_pct_per 0.0005`/层 × 攻击力 |
 | 三角初华 Doloris | 成员获得的 **Fever 翻倍** | `fever_ratio 2` |
-| 丰川祥子 Oblivionis | **非成员**干员也获得上述三项效果的 25% | `obliv_share 0.25`（5 人再 ×2） |
+| 丰川祥子 Oblivionis | **非成员**干员也获得上述三项效果的 10% | `obliv_share 0.1`（5 人再 ×2） |
 
 > 其余黑板键：`refresh_every 9`、`prep_layer 1`、`prep_fund 1`、`deploy_slot 1`。数据侧另带 `spec.tiers` /
 > `spec.formulas` / `spec.assumed`（简化假设），供人读与对账。
@@ -86,9 +86,9 @@
 | 来源 | 触发 | 加多少 | 上限 | 在哪 |
 |---|---|---|---|---|
 | 盟约 2 人 tier | 休整期结束，每名在场成员 | `prep_layer 1`×成员数（×2 if 5 人） | — | `meta/main.mjs` `onPrepEnd` |
-| 祥子 garrison `AVEMUJICA_FEVER_KILL` | 战斗内击倒敌人 | `kill_layers`（普通 1 / 精锐 2） | 全场 `max_count`（12 / 24） | `battle/main.mjs` |
+| 祥子 garrison `AVEMUJICA_FEVER_KILL` | 战斗内击倒敌人 | `kill_layers`（普通 1 / 精锐 2） | 全场 `max_count`（12 / 12） | `battle/main.mjs` |
 | 初华 garrison `AVEMUJICA_EXTRA_TRIGGER` | 祥子的击倒特质触发且初华在场 | `partner_layers`（1 / 2） | **每场 1 次** | `battle/main.mjs` |
-| 海铃 garrison `AVEMUJICA_REFRESH_LAYERS` | 休整期手动刷新商店 | `layers`（1 / 2） | 该干员每回合 `max_count`（6 / 12） | `meta/main.mjs` |
+| 海铃 garrison `AVEMUJICA_REFRESH_LAYERS` | 休整期手动刷新商店 | `layers`（1 / 2） | 该干员每回合 `max_count`（6 / 6） | `meta/main.mjs` |
 | 若叶睦 garrison `garrison_164` | 战斗内自身受到伤害 | `bond_add_count`（5 / 10） | `max_count`（2 / 4） | 引擎内置 handler（见 §6） |
 
 >「使已激活盟约层数 +n」= 对玩家**所有已激活盟约**加层（同「蜜莓」官方写法，含颂乐人偶自身）。
@@ -125,7 +125,27 @@
 - **触发**：`fever ≥ 450` ⇒ 清零、进入 **20 s Fever 状态**（期间每 0.5 s 给在场成员大量 SP 回复，近似官方「无视技力持续放技能」），
   并打引擎内置的 `fever` 特效（品红团队光环，锚在**一名在场成员**身上）。触发后进度**同步清零**，客户端图标跟着重置。
 
+### 1.6 成员特质的「另一半」（2026-10-14 补齐）
+
+每位成员的「毋畏X」特质除 Fever 增量外还有后半段（数值同样**逐条取自该干员 `chess.json` 里那条 `bb`**），
+全部由战斗侧盟约安装器 [`battle/main.mjs`](battle/main.mjs)（`installAveMujica`）实现，团队/成员判定都在那一处：
+
+| 成员 | 特质 | `bb` 键 | 效果 | 实现 |
+|---|---|---|---|---|
+| 三角初华 Doloris | 毋畏悲伤 | `bonus_scale` | **攻击范围内**成员攻击时，附带「初华攻击力 × bonus_scale」的**法术**伤害 | 成员普攻钩子 `onDmg` + `S.inRange(初华, 攻击者)` |
+| 八幡海铃 Timoris | 毋畏恐惧 | `dmg_up` | **在场时**，成员对处于**停顿 / 恐惧**的敌人造成的伤害 ×(1 + dmg_up) | 全局 `hit` 钩子：`dmg.mul *= 1 + dmg_up` |
+| 若叶睦 Mortis | 毋畏死亡 | `max_hp` | **在场时**，**全体成员**生命上限 +max_hp | `bond:avemujica:hp`（`directMods({hp})`；deploy / death / layerGain / 每 0.5 s 刷新） |
+| 丰川祥子 Oblivionis | 颂乐音符 | `def_pen` / `res_pen` / `max_stack` | 场上每存在 1 个**音符**，成员无视敌人 def_pen 防御 / res_pen 法抗（最多 max_stack 层） | `bond:avemujica:note` → `{ defIgnorePct, resIgnorePct }` |
+
+- **音符计数**：引擎未建模「音符」实体，近似为**祥子每造成一次对敌伤害实例记 1 个音符**，音符存活 **3 s**
+  【`[ASSUMED]`：数据无存活时长，取约 2 个攻击间隔（`stats.bat` 1.3 s）】后消失；层数 = `min(max_stack, 在场音符数)`。
+  祥子 S1「依次演奏 8 个音符」会连续记 8 个 ⇒ 期间快速逼近 `max_stack=10`。
+- **穿透键名**：`defIgnorePct` / `resIgnorePct` 是**源（攻击者）侧**统计量，引擎 `mitigate` 按百分比扣防御 / 法抗。
+- **增伤键名**：`hit` 钩子在减伤结算前改写 `dmg.mul`；**生命上限**走 `hpPct`（`directMods`）。
+- 若叶睦那处原本只把 `hpPct` 加在**自身**（kit 内 `[ASSUMED]`），现改为**对全体成员生效**——team 判定回到盟约安装器。
+
 ---
+
 
 ## 2. 干员
 
@@ -134,13 +154,13 @@
 | chessId | 名字 / 代号 | 阶级 | 职业 | 盟约（`bonds`） | 特质要点（`garrisonIds`） |
 |---|---|---|---|---|---|
 | `chess_char_6_30_a` | 丰川祥子 / Oblivionis | 6 | WARRIOR·领主 lord | `aveMujica`, `miraShip` | `garrison_180_a`：战斗开始获得 ½ 层数 Fever；击倒敌人 → 全员盟约层 +1（≤12 次） |
-| `chess_char_6_30_b` | 丰川祥子（精锐） | 6 | 同上 | 同上 | `garrison_180_b`：开场获得**全部**层数 Fever；击倒 → +2（≤24 次）。模组 `LOR-Y` 激活（攻速 +12） |
+| `chess_char_6_30_b` | 丰川祥子（精锐） | 6 | 同上 | 同上 | `garrison_180_b`：开场获得**全部**层数 Fever；击倒 → +2（≤12 次）。模组 `LOR-Y` 激活（攻速 +12） |
 | `chess_char_5_30_a` | 三角初华 / Doloris | 4 | SUPPORT·吟游者 bard | `aveMujica`, `deputShip` | `garrison_181_a`：成员特质触发额外 +1 次；源为祥子时全员盟约层 +1（每回合 1 次） |
 | `chess_char_5_30_b` | 三角初华（精锐） | 4 | 同上 | 同上 | `garrison_181_b`：额外触发 +2、同伴加层 +2。模组 `BAR-X` 激活（3 名以上同格 → 攻击力 +8%） |
 | `chess_char_5_32_a` | 八幡海铃 / Timoris | 3 | SPECIAL·伏击客 stalker | `aveMujica`, `siracusaShip`, `soloShip` | `garrison_182_a`：战斗中刷新时自身所属盟约层 +1（≤6 次） |
-| `chess_char_5_32_b` | 八幡海铃（精锐） | 3 | 同上 | 同上 | `garrison_182_b`：刷新 +2（≤12 次）。模组 `AMB-Y` 激活（闪避 50%→65%） |
-| `chess_char_5_31_a` | 祐天寺若麦 / Amoris | 2 | WARRIOR·撼地者 hammer | `aveMujica`, `skillfulShip` | `garrison_183_a`：进入休整期时成员 <3 → 1 次免费刷新；否则 +1 资金 |
-| `chess_char_5_31_b` | 祐天寺若麦（精锐） | 2 | 同上 | 同上 | `garrison_183_b`：免费刷新 2 次 / 资金 +2。模组 `HAM-X` 激活（溅射 ≥3 敌 → 当次攻击 ×115%） |
+| `chess_char_5_32_b` | 八幡海铃（精锐） | 3 | 同上 | 同上 | `garrison_182_b`：刷新 +2（≤6 次）。模组 `AMB-Y` 激活（闪避 50%→65%） |
+| `chess_char_5_31_a` | 祐天寺若麦 / Amoris | 2 | WARRIOR·撼地者 hammer | `aveMujica`, `skillfulShip` | `garrison_183_a`：进入休整期时成员 <3 → +1 资金；否则 1 次免费刷新 |
+| `chess_char_5_31_b` | 祐天寺若麦（精锐） | 2 | 同上 | 同上 | `garrison_183_b`：资金 +2 / 免费刷新 2 次。模组 `HAM-X` 激活（溅射 ≥3 敌 → 当次攻击 ×115%） |
 | `chess_char_5_25_a` | 若叶睦 / Mortis | 5 | SPECIAL·傀儡师 dollkeeper | `aveMujica`, `rimBilliton`, `indomShip` | `garrison_164_a`：战斗内受伤时自身盟约层 +5（≤2 次） |
 | `chess_char_5_25_b` | 若叶睦（精锐） | 5 | 同上 | 同上 | `garrison_164_b`：受伤 +10（≤4 次）。模组 `PUM-Y` 激活 |
 
@@ -184,13 +204,13 @@
 | garrisonId | 归属干员 | `effectType` | `eventType` | 效果（`bb`） |
 |---|---|---|---|---|
 | `garrison_180_a` | 丰川祥子 | `AVEMUJICA_FEVER_KILL` | `IN_BATTLE` | 战斗开始 Fever += 层数 × `fever_ratio 0.5`；击倒敌人 → 所有活跃盟约层 `+kill_layers 1`（`max_count 12`） |
-| `garrison_180_b` | 丰川祥子（精锐） | `AVEMUJICA_FEVER_KILL` | `IN_BATTLE` | 开场 Fever += 层数 × `1`；击倒 → `+2`（`max_count 24`） |
+| `garrison_180_b` | 丰川祥子（精锐） | `AVEMUJICA_FEVER_KILL` | `IN_BATTLE` | 开场 Fever += 层数 × `1`；击倒 → `+2`（`max_count 12`） |
 | `garrison_181_a` | 三角初华 | `AVEMUJICA_EXTRA_TRIGGER` | `IN_BATTLE` | 成员特质触发额外 `+extra_trigger 1` 次；触发者为祥子（`bbStr.partner oblivionis`）时全员盟约 `+partner_layers 1`，每场 1 次 |
 | `garrison_181_b` | 三角初华（精锐） | `AVEMUJICA_EXTRA_TRIGGER` | `IN_BATTLE` | 额外触发 `+2`、同伴加层 `+2` |
 | `garrison_182_a` | 八幡海铃 | `AVEMUJICA_REFRESH_LAYERS` | `SERVER_REFRESH_SHOP` | 刷新时使自身所属已激活盟约 `+layers 1`（`max_count 6`） |
-| `garrison_182_b` | 八幡海铃（精锐） | `AVEMUJICA_REFRESH_LAYERS` | `SERVER_REFRESH_SHOP` | `+2`（`max_count 12`） |
-| `garrison_183_a` | 祐天寺若麦 | `AVEMUJICA_PREP_REWARD` | `SERVER_PREP_START` | 进入休整期成员 <`check_count 3` → 免费刷新 `refresh 1` 次；否则 +`fund 1` 资金 |
-| `garrison_183_b` | 祐天寺若麦（精锐） | `AVEMUJICA_PREP_REWARD` | `SERVER_PREP_START` | 免费刷新 `2` 次 / 资金 `+2` |
+| `garrison_182_b` | 八幡海铃（精锐） | `AVEMUJICA_REFRESH_LAYERS` | `SERVER_REFRESH_SHOP` | `+2`（`max_count 6`） |
+| `garrison_183_a` | 祐天寺若麦 | `AVEMUJICA_PREP_REWARD` | `SERVER_PREP_START` | 进入休整期成员 <`check_count 3` → +`fund 1` 资金；否则 免费刷新 `refresh 1` 次 |
+| `garrison_183_b` | 祐天寺若麦（精锐） | `AVEMUJICA_PREP_REWARD` | `SERVER_PREP_START` | 资金 `+2` / 免费刷新 `2` 次 |
 | `garrison_164_a` | 若叶睦 | `act_gar_event_onhurt_add_bond_layer`（`effectType: ADD_BOND`） | `IN_BATTLE` | 受到伤害时使**自身**所属盟约 `+bond_add_count 5`（`max_count 2`，`battleRuneKey: env_gbuff_new_with_verify`） |
 | `garrison_164_b` | 若叶睦（精锐） | 同上 | `IN_BATTLE` | `+10`（`max_count 4`） |
 
@@ -209,7 +229,7 @@
 
 | 注册调用 | 目标 | 作用 |
 |---|---|---|
-| `registerBondInstaller('aveMujica', installAveMujica)` | 盟约 installer | 5 名成员特质（Amoris ATK / Timoris 停顿 / Mortis 凋亡损伤 / Doloris Fever ×2 / Oblivionis 25% 共享）+ **Fever 状态机**（上限 450，满触发 20 s，期间每 0.5 s 给在场成员大量 SP 回复） |
+| `registerBondInstaller('aveMujica', installAveMujica)` | 盟约 installer | 5 名成员特质（Amoris ATK / Timoris 停顿 / Mortis 凋亡损伤 / Doloris Fever ×2 / Oblivionis 10% 共享）+ **Fever 状态机**（上限 450，满触发 20 s，期间每 0.5 s 给在场成员大量 SP 回复） |
 | `registerGarrisonInstaller('AVEMUJICA_FEVER_KILL', …)` | 祥子 | 开场按层数注入 Fever；击倒敌人 → 全员盟约加层 + 初华连携 |
 | `registerGarrisonInstaller('AVEMUJICA_EXTRA_TRIGGER', …)` | 初华 | 把「成员特质额外触发」做进 `battle._rbAmplifiers` 放大器列表 |
 
@@ -301,6 +321,8 @@
   `char/portrait/<charId>.png`、`char/portrait/<charId>_2.png`；外加 `spine/op/<charId>/{front,back}/` 的
   `.skel` / `.atlas` / `.png` 与动画映射（`idle`/`deploy`/`attack`/`skill`/`die`/`skills{0,1,2}`）。
 - 注意 `char_4183_mortis` 的 `portrait` 指向 `char_4183_mortis_1.png`（其它成员是 `_2`）。
+- `anims` 的 `skill`/`skills` 已由项目 Spine 管线（`tools/assets/skel.mjs` + `tools/assets/anim-roles.mjs`）对真实骨架重算：
+  `char_4183_mortis` 原先把 `via:"attack"` 写进了技能片段，导致开技能时只播普攻动作，现已改回 `Skill_1`/`Skill_2`。
 
 ### 7.2 盟约 / 分队图标（走扁平表，非 `bondIcons`）
 

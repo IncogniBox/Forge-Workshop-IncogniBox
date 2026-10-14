@@ -15,8 +15,12 @@
 //   * 除基础填充外，5 位成员「毋畏X」特质各自的 Fever 增量也已**逐条接线**（数值取各自 chess 记录里的 bb）：
 //     祥子 毋畏遗忘 +3/造成伤害、初华 毋畏悲伤 +5/治疗成员、若麦 毋畏爱意 +3/秒在场、
 //     海铃 毋畏恐惧 +2/造成停顿、若叶睦 毋畏死亡 +3/自身受伤。这些也走同一套乘数。
+//   * 五位成员「毋畏X」特质的**另一半**（2026-10-14 补齐，语义同上、数值同样取自各角色 chess 记录）：
+//     初华 攻击范围内成员攻击时附带 bonus_scale ×初华攻击力 的**法术**伤害；海铃 在场时成员对**停顿/恐惧**敌人
+//     造成的伤害 ×(1 + dmg_up)；若叶睦 在场时**全体成员**生命上限 +max_hp；祥子「颂乐音符」：场上每存在 1 个音符，
+//     成员无视敌人 def_pen 防御 / res_pen 法抗（≤ max_stack 层）。音符寿命 3 s [ASSUMED：数据无该值]。
 //   * 「使已激活的盟约层数+1」= 所有已激活盟约（同蜜莓官方写法），含颂乐人偶自身。
-//   * 丰川祥子 25%：非成员干员获得 Amoris/Timoris/Mortis 三项战斗效果的 25%（随 5 人翻倍）。
+//   * 丰川祥子 10%：非成员干员获得 Amoris/Timoris/Mortis 三项战斗效果的 10%（随 5 人翻倍）。
 //   * 「可部署干员数量上限+1」在休整期那一半（meta/main.mjs，onBondChange 当帧生效）。
 
 import * as S from '@battle/mod.js';
@@ -66,6 +70,9 @@ export const FEVER_LIVE = { byPid: Object.create(null) };
  *   Doloris  Fever 获得量 ×fever_ratio
  *   Oblivionis 非成员干员获得上述三项效果的 obliv_share（5 人时再 ×2）
  *   Fever 系统见头注释。
+ * 成员各自「毋畏X」特质的**另一半**（2026-10-14 补齐）：初华 攻击范围内成员攻击附带 bonus_scale×攻击力 法术伤害；
+ *   海铃 在场时成员对停顿/恐惧敌人增伤 dmg_up；若叶睦 在场时全体成员生命上限 +max_hp；
+ *   祥子「颂乐音符」成员按场上音符数无视 def_pen 防御 / res_pen 法抗。
  */
 function installAveMujica(battle, pid, bb, members) {
   const memberSet = new Set(members);
@@ -110,6 +117,15 @@ function installAveMujica(battle, pid, bb, members) {
   };
   /** 本场属于某角色的干员（含未上场）—— 用它们各自的任命挂 Fever 钩子。 */
   const roleUnits = (role) => S.playerOps(battle, pid, { fieldOnly: false }).filter((u) => roleOf(u) === role);
+  /** 该角色**当前在场**的第一个成员（无 ⇒ null）。 */
+  const fieldRole = (role) => S.bondMembers(battle, pid, 'aveMujica', { fieldOnly: true }).find((u) => roleOf(u) === role) || null;
+  /** 按特质**名字**取 bb（「颂乐音符」等不在 TALENT_NAME 里的用它；`u.def.raw.talents`）。 */
+  const talentBbByName = (u, name) => {
+    const list = u && u.def && u.def.raw && Array.isArray(u.def.raw.talents) ? u.def.raw.talents : null;
+    if (!list) return null;
+    const t = list.find((x) => x && x.name === name);
+    return t && t.bb && typeof t.bb === 'object' ? t.bb : null;
+  };
 
   // ---- Amoris: 成员 ATK buff（refresh: deploy / layerGain / battleStart）
   const applyAtk = () => {
@@ -124,10 +140,23 @@ function installAveMujica(battle, pid, bb, members) {
       else battle.removeBuff(u, 'bond:avemujica:atk');
     }
   };
-  applyAtk();
-  onLayers(battle, pid, 'aveMujica', applyAtk);
-  battle.on('deploy', ({ unit }) => { if (unit.ownerId === pid) applyAtk(); });
-  battle.on('battleStart', applyAtk);
+  // ---- Mortis「毋畏死亡」后半：在场时**全体成员**生命上限 +max_hp（原先是单挂自身）
+  const applyHp = () => {
+    const m = fieldRole('mortis');
+    const hp = m ? num((roleTalentBb(m, 'mortis') || {}).max_hp, 0) : 0;
+    for (const u of allOps()) {
+      if (memberSet.has(u) && hp > 0) S.passiveBuff(battle, u, 'bond:avemujica:hp', S.directMods({ hp }));
+      else battle.removeBuff(u, 'bond:avemujica:hp');
+    }
+  };
+  // 团队 buff 一起刷新（成员进出场即时生效）：deploy / death / battleStart / layerGain / 每 0.5 s
+  const refreshTeam = () => { applyAtk(); applyHp(); };
+  refreshTeam();
+  onLayers(battle, pid, 'aveMujica', refreshTeam);
+  battle.on('deploy', ({ unit }) => { if (unit.ownerId === pid) refreshTeam(); });
+  battle.on('death', ({ unit }) => { if (unit && unit.ownerId === pid) refreshTeam(); });
+  battle.on('battleStart', refreshTeam);
+  battle.every(0.5, refreshTeam);
 
   // ---- Timoris / Mortis / Fever 的伤害钩子（对每个己方干员注册；丰川祥子在场时非成员吃 25%）
   /** 把本玩家当前的 Fever 读数写进模块级表（客户端面板读它画积攒进度条）。 */
@@ -171,9 +200,65 @@ function installAveMujica(battle, pid, bb, members) {
         battle.dealDamage(u, t, { amount: pct * u.s.atk, type: 'element', element: 'apoptosis', canDodge: false, tags: ['bond:avemujica'] });
       }
     }
+    // 三角初华「毋畏悲伤」后半：攻击范围内的成员攻击时，附带「初华攻击力 × bonus_scale」的法术伤害
+    if (memberSet.has(u) && r.doloris) {
+      const dl = fieldRole('doloris');
+      const bs = dl ? num((roleTalentBb(dl, 'doloris') || {}).bonus_scale, 0) : 0;
+      if (bs > 0 && S.inRange(dl, u)) {
+        battle.dealDamage(u, t, { amount: dl.s.atk * bs, type: 'arts', canDodge: false, tags: ['bond:avemujica'] });
+      }
+    }
     gainFever(FEVER_PER_HIT);
   };
   for (const u of S.playerOps(battle, pid, { fieldOnly: false })) onUnitDamaged(battle, u, onDmg);
+
+  // ---- 八幡海铃「毋畏恐惧」后半：在场时，成员对处于停顿/恐惧的敌人造成的伤害 ×(1 + dmg_up)
+  const debuffed = (t) => Array.isArray(t && t.buffs) && t.buffs.some((b) => b && (b.status === 'sluggish' || b.status === 'fear'));
+  battle.on('hit', (c) => {
+    const dmg = c.dmg, t = c.target;
+    if (!dmg || !isEnemyTarget(t) || !memberSet.has(c.source) || !debuffed(t)) return;
+    const tm = fieldRole('timoris');
+    const v = tm ? num((roleTalentBb(tm, 'timoris') || {}).dmg_up, 0) : 0;
+    if (v > 0) dmg.mul *= 1 + v;
+  });
+
+  // ---- 丰川祥子「颂乐音符」T1：场上每存在一个音符，成员无视敌人 def_pen 防御 / res_pen 法抗（≤ max_stack）
+  // 引擎未建模音符实体：祥子每「演奏」（一次对敌造成伤害的实例）记 1 个音符，NOTE_LIFE 秒后消失
+  // [ASSUMED: 数据无音符存活时长，取约 2 个攻击间隔（bat 1.3 s）]。
+  const NOTE_BUF = 'bond:avemujica:note';
+  const NOTE_LIFE = 3;
+  const noteState = S.battleStore(battle, 'avemujica:notes', () => ({ exp: [] }));
+  const addNote = () => { const e = noteState.exp; if (e.length < 64) e.push(battle.time + NOTE_LIFE); };
+  const noteCount = () => {
+    const e = noteState.exp, now = battle.time;
+    while (e.length && e[0] <= now) e.shift(); // 入栈时间递增 ⇒ 天然有序
+    return e.length;
+  };
+  const applyNotes = () => {
+    const ob = fieldRole('oblivionis');
+    const tb = ob ? talentBbByName(ob, '颂乐音符') : null;
+    const cap = tb ? Math.max(0, Math.floor(num(tb.max_stack, 0))) : 0;
+    const n = cap > 0 ? Math.min(cap, noteCount()) : 0;
+    const defPen = tb ? num(tb.def_pen, 0) : 0;
+    const resPen = tb ? num(tb.res_pen, 0) : 0;
+    const mods = {};
+    if (n > 0 && defPen > 0) mods.defIgnorePct = n * defPen;
+    if (n > 0 && resPen > 0) mods.resIgnorePct = n * resPen;
+    const has = Object.keys(mods).length > 0;
+    for (const u of allOps()) {
+      if (memberSet.has(u) && has) S.passiveBuff(battle, u, NOTE_BUF, mods);
+      else battle.removeBuff(u, NOTE_BUF);
+    }
+  };
+  applyNotes();
+  battle.every(0.25, applyNotes);
+  // 祥子每造成一次敌人伤害 ⇒ 记一个音符（过滤掉本包自己的附加伤害）
+  for (const u of roleUnits('oblivionis')) {
+    onUnitDamaged(battle, u, (dctx) => {
+      if (!S.onField(u) || !isEnemyTarget(dctx.target) || (dctx.dmg && ownTag(dctx.dmg, 'bond:avemujica'))) return;
+      addNote();
+    });
+  }
 
   // ---- 各成员「毋畏X」特质各自的 Fever 增量（逐条接线；数值取各自 chess 记录里的 bb）---------------------------
   // 丰川祥子「毋畏遗忘」：对敌人造成**任何**伤害（普攻与技能）时 Fever +bb.fever（与「成员攻击填充 +2」相加）

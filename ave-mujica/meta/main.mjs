@@ -8,7 +8,7 @@
 // 注册（每局一份 registry 副本上）：
 //   bond:aveMujica          1/2/3/4/5 人数 tier（刷新发放 / 休整期末层数 / 每回合资金 / 部署位当帧 / 翻倍）
 //   garrison:AVEMUJICA_REFRESH_LAYERS  海铃 <刷新时> 自身所属已激活盟约层数 +layers
-//   garrison:AVEMUJICA_PREP_REWARD     若麦 <进入休整期时> 成员<3 → 免费刷新；否则 +资金
+//   garrison:AVEMUJICA_PREP_REWARD     若麦 <进入休整期时> 成员<3 → +资金；否则 免费刷新
 //   band:band_wuyouyoumeng   策略【无忧梦呓】每回合首次获得颂乐人偶干员 → 发一名随机干员
 
 export function registerMeta(registry) {
@@ -48,13 +48,13 @@ export function registerMeta(registry) {
       if (!(n > 0)) return;
       for (const b of bondOrder(ctx)) if (ctx.bondActive(b)) ctx.addLayers(b, n, { requireActive: false });
     },
-    // 3人: 进入休整期（新轮开始）时，每有1名颂乐人偶成员，额外获得 prep_fund 资金；每回合最多计 3 名成员
+    // 3人: 进入休整期（新轮开始）时，每有1名颂乐人偶成员，额外获得 prep_fund 资金；该效果最多生效 2 名成员
     // （5人盟约效果翻倍 → 单次数额 ×2）
     onRoundStart(ctx) {
       if (tierOf(ctx) < 3) return;
       const p = params(ctx);
       const fund = Math.max(1, Math.floor(num(p.prep_fund, 1) * dblOf(ctx)));
-      const n = Math.min(3, memberCount(ctx)); // 「（最多3次）」：每回合最多计 3 名成员
+      const n = Math.min(2, memberCount(ctx)); // 「该效果最多生效2名干员」：每回合最多计 2 名成员
       if (n > 0) ctx.addFunds(n * fund, 'bond:aveMujica');
     },
     // 4人: 可部署干员数量上限 +1（5人盟约效果翻倍 → +2）。固定值，不随成员数变化。改为在编队变化当帧即时结算
@@ -91,7 +91,7 @@ export function registerMeta(registry) {
     },
   });
 
-  // 若麦: <进入休整期时>成员数 <check_count → 免费刷新 refresh 次；否则 +fund 资金
+  // 若麦: <进入休整期时>成员数 <check_count → +fund 资金；否则 免费刷新 refresh 次
   registry.garrison('AVEMUJICA_PREP_REWARD', {
     run(ctx) {
       const src = ctx.source || {};
@@ -99,11 +99,11 @@ export function registerMeta(registry) {
       const count = typeof ctx.bondCount === 'function' ? ctx.bondCount(BOND) : 0;
       const check = Math.max(1, Math.floor(num(bb.check_count, 3)));
       if (count < check) {
-        const f = Math.max(1, Math.floor(num(bb.refresh, 1)));
-        if (typeof ctx.grantFreeRefresh === 'function') ctx.grantFreeRefresh(f);
-      } else {
         const v = Math.max(1, Math.floor(num(bb.fund, 1)));
         ctx.addFunds(v, 'bond:aveMujica');
+      } else {
+        const f = Math.max(1, Math.floor(num(bb.refresh, 1)));
+        if (typeof ctx.grantFreeRefresh === 'function') ctx.grantFreeRefresh(f);
       }
     },
   });

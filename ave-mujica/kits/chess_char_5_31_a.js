@@ -3,7 +3,7 @@
 // S1 如焰般热烈 (duration): 攻击变为三连击（首击溅射），每击 atk×atk_scale 物伤。[ASSUMED]
 // S2 如麦般生长 (duration): 攻击范围扩大，攻击变为八连击，每击 atk×atk_scale 物伤。[ASSUMED]
 // T1 双利手: 攻击时 prob 概率使敌人获得 fragile 脆弱，持续 fragile_dur 秒（「进行持续攻击」引擎无该开关，未实现）。
-// T2 毋畏爱意 / 模组成员增伤: Fever 系统与成员判定由引擎侧 mod/ave-mujica 的盟约安装器负责，本 kit 不重复。
+// T2 毋畏爱意 / 模组成员增伤: Fever 系统与成员判定由本包盟约安装器（battle/main.mjs 的 installAveMujica）负责，本 kit 不重复。
 // 模组 HAM-X「年轻的麦子」: 溅射范围内有 ≥3 个敌人时，使当次攻击力提升至 atk_scale（近似：主目标伤害 ×atk_scale）。
 import { num, skillBbOf, talentBb, traitBb, isMainHit, cheb } from '@kit/tier1.js';
 

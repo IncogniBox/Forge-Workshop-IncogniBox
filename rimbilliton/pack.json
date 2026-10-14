@@ -5,7 +5,7 @@
  "author": "the Rim Billiton mod",
  "license": "GPL-3.0-or-later",
  "description": "雷姆必拓 mod：9 名卡池干员 / 核心盟约（开拓心）/ 特质 / 装备 / 开拓大地策略 / 沙地兽 token。数据与素材走创意工坊叠加层，官方 data/*.json 不被改动。",
- "gameVersion": "0.2.2",
+ "gameVersion": "0.2.6",
  "combat": true,
  "stripDiyOverlaps": true,
  "server": {
@@ -62,6 +62,7 @@
       ],
       "anims": {
        "idle": "Idle",
+       "deploy": "Start",
        "attack": {
         "begin": null,
         "loop": "Attack",
@@ -72,7 +73,6 @@
         "begin": "Skill_1_Begin",
         "loop": "Skill_1_Loop",
         "end": "Skill_1_End",
-        "via": "attack",
         "index": 0,
         "idle": null
        },
@@ -84,7 +84,6 @@
          "begin": "Skill_1_Begin",
          "loop": "Skill_1_Loop",
          "end": "Skill_1_End",
-         "via": "attack",
          "index": 0,
          "idle": null
         },
@@ -92,8 +91,15 @@
          "begin": "Skill_2_Begin",
          "loop": "Skill_2_Loop",
          "end": "Skill_2_End",
-         "via": "attack",
          "index": 1,
+         "idle": null
+        },
+        "2": {
+         "begin": null,
+         "loop": "Attack",
+         "end": null,
+         "via": "attack",
+         "index": 2,
          "idle": null
         }
        }
@@ -107,6 +113,7 @@
       ],
       "anims": {
        "idle": "Idle",
+       "deploy": "Start",
        "attack": {
         "begin": null,
         "loop": "Attack",
@@ -117,7 +124,6 @@
         "begin": "Skill_1_Begin",
         "loop": "Skill_1_Loop",
         "end": "Skill_1_End",
-        "via": "attack",
         "index": 0,
         "idle": null
        },
@@ -129,7 +135,6 @@
          "begin": "Skill_1_Begin",
          "loop": "Skill_1_Loop",
          "end": "Skill_1_End",
-         "via": "attack",
          "index": 0,
          "idle": null
         },
@@ -137,8 +142,15 @@
          "begin": "Skill_2_Begin",
          "loop": "Skill_2_Loop",
          "end": "Skill_2_End",
-         "via": "attack",
          "index": 1,
+         "idle": null
+        },
+        "2": {
+         "begin": null,
+         "loop": "Attack",
+         "end": null,
+         "via": "attack",
+         "index": 2,
          "idle": null
         }
        }
@@ -160,12 +172,18 @@
       ],
       "anims": {
        "idle": "Idle",
+       "deploy": "Start",
        "attack": {
         "begin": null,
         "loop": "Attack",
         "end": null
        },
-       "attackDown": null,
+       "attackDown": {
+        "begin": null,
+        "loop": "Combat_Down",
+        "end": null,
+        "via": "combat"
+       },
        "skill": {
         "begin": null,
         "loop": "Attack",
@@ -193,6 +211,14 @@
          "via": "attack",
          "index": 1,
          "idle": null
+        },
+        "2": {
+         "begin": null,
+         "loop": "Attack",
+         "end": null,
+         "via": "attack",
+         "index": 2,
+         "idle": null
         }
        }
       }
@@ -205,6 +231,7 @@
       ],
       "anims": {
        "idle": "Idle",
+       "deploy": "Start",
        "attack": {
         "begin": null,
         "loop": "Attack",
@@ -237,6 +264,14 @@
          "end": null,
          "via": "attack",
          "index": 1,
+         "idle": null
+        },
+        "2": {
+         "begin": null,
+         "loop": "Attack",
+         "end": null,
+         "via": "attack",
+         "index": 2,
          "idle": null
         }
        }
@@ -258,6 +293,7 @@
       ],
       "anims": {
        "idle": "Idle",
+       "deploy": "Start",
        "attack": {
         "begin": null,
         "loop": "Attack",
@@ -266,9 +302,8 @@
        "attackDown": null,
        "skill": {
         "begin": null,
-        "loop": "Attack",
+        "loop": "Skill",
         "end": null,
-        "via": "attack",
         "index": 0,
         "idle": null
        },
@@ -278,9 +313,8 @@
        "skills": {
         "0": {
          "begin": null,
-         "loop": "Attack",
+         "loop": "Skill",
          "end": null,
-         "via": "attack",
          "index": 0,
          "idle": null
         },
@@ -288,8 +322,14 @@
          "begin": null,
          "loop": "Skill",
          "end": null,
-         "via": "attack",
          "index": 1,
+         "idle": null
+        },
+        "2": {
+         "begin": null,
+         "loop": "Skill",
+         "end": null,
+         "index": 2,
          "idle": null
         }
        }
@@ -303,6 +343,7 @@
       ],
       "anims": {
        "idle": "Idle",
+       "deploy": "Start",
        "attack": {
         "begin": null,
         "loop": "Attack",
@@ -311,9 +352,8 @@
        "attackDown": null,
        "skill": {
         "begin": null,
-        "loop": "Attack",
+        "loop": "Skill",
         "end": null,
-        "via": "attack",
         "index": 0,
         "idle": null
        },
@@ -323,9 +363,8 @@
        "skills": {
         "0": {
          "begin": null,
-         "loop": "Attack",
+         "loop": "Skill",
          "end": null,
-         "via": "attack",
          "index": 0,
          "idle": null
         },
@@ -333,8 +372,14 @@
          "begin": null,
          "loop": "Skill",
          "end": null,
-         "via": "attack",
          "index": 1,
+         "idle": null
+        },
+        "2": {
+         "begin": null,
+         "loop": "Skill",
+         "end": null,
+         "index": 2,
          "idle": null
         }
        }
@@ -356,6 +401,7 @@
       ],
       "anims": {
        "idle": "Idle",
+       "deploy": "Start",
        "attack": {
         "begin": null,
         "loop": "Attack",
@@ -364,9 +410,8 @@
        "attackDown": null,
        "skill": {
         "begin": null,
-        "loop": "Attack",
+        "loop": "Skill",
         "end": null,
-        "via": "attack",
         "index": 0,
         "idle": null
        },
@@ -376,9 +421,8 @@
        "skills": {
         "0": {
          "begin": null,
-         "loop": "Attack",
+         "loop": "Skill",
          "end": null,
-         "via": "attack",
          "index": 0,
          "idle": null
         },
@@ -386,8 +430,14 @@
          "begin": "skill_2_Begin",
          "loop": "skill_2_Loop",
          "end": "skill_2_End",
-         "via": "attack",
          "index": 1,
+         "idle": null
+        },
+        "2": {
+         "begin": null,
+         "loop": "Skill",
+         "end": null,
+         "index": 2,
          "idle": null
         }
        }
@@ -401,6 +451,7 @@
       ],
       "anims": {
        "idle": "Idle",
+       "deploy": "Start",
        "attack": {
         "begin": null,
         "loop": "Attack",
@@ -409,9 +460,8 @@
        "attackDown": null,
        "skill": {
         "begin": null,
-        "loop": "Attack",
+        "loop": "Skill",
         "end": null,
-        "via": "attack",
         "index": 0,
         "idle": null
        },
@@ -421,9 +471,8 @@
        "skills": {
         "0": {
          "begin": null,
-         "loop": "Attack",
+         "loop": "Skill",
          "end": null,
-         "via": "attack",
          "index": 0,
          "idle": null
         },
@@ -431,8 +480,14 @@
          "begin": "skill_2_Begin",
          "loop": "skill_2_Loop",
          "end": "skill_2_End",
-         "via": "attack",
          "index": 1,
+         "idle": null
+        },
+        "2": {
+         "begin": null,
+         "loop": "Skill",
+         "end": null,
+         "index": 2,
          "idle": null
         }
        }

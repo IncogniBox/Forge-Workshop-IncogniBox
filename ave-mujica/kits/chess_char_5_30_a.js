@@ -4,7 +4,8 @@
 // S1 我思念的 (duration): 攻击范围扩大，范围内友方获得相当于自身攻击力 share 与防御力 def_share 的鼓舞（flat 加值），友方受伤时为其治疗 heal 点。
 // S2 我悲悯的 (duration): 每 interval 秒对随机敌人造成 atk×dps_scale 法伤并治疗最伤友方 atk×heal_scale；范围内其他友方获得 atk×inspire 的鼓舞。[ASSUMED]
 // T1 谎言的假面: 技能未开启时每 interval 秒治疗攻击范围内生命最低的友方以 atk×heal_scale 生命（「优先选择丰川祥子」需乐队成员判定，未实现）。
-// T2 毋畏悲伤 / 模组 Fever 相关: Fever 系统与成员判定由引擎侧 mod/ave-mujica 的盟约安装器负责，本 kit 不重复。
+// T2 毋畏悲伤: Fever（治疗成员 +5）与「攻击范围内成员攻击时附带 初华攻击力×bonus_scale 的法术伤害」都由本包盟约安装器
+//   （battle/main.mjs 的 installAveMujica）负责，本 kit 不重复。
 // 模组 BAR-X「占卜的意义」: 攻击范围内存在 2 名及以上其他干员时，攻击力+8%（不受技能影响 — 近似为 atkPct）。
 import { num, skillBbOf, talentBb, traitBb, toggleBuff } from '@kit/tier1.js';
 

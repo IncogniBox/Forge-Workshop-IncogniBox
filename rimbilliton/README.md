@@ -10,7 +10,7 @@
 怎么把层数与成员堆起来」展开，配套的特质/装备（发放干员、加层、复刻战斗中效果）都在服务这个循环。
 
 **元数据**：`id: rimbilliton`，显示名「雷姆必拓」，包版本 `1.2.0`，作者 `the Rim Billiton mod`，`license: GPL-3.0-or-later`，
-`gameVersion: 0.2.2`（本仓库引擎为 0.2.4），`combat: true`，`stripDiyOverlaps: true`（本包做成棋子的干员会从**自选编队池**里摘除，
+`gameVersion: 0.2.6`（本仓库引擎为 0.2.6），`combat: true`，`stripDiyOverlaps: true`（本包做成棋子的干员会从**自选编队池**里摘除，
 避免同一干员同时以棋子与自选条目两种身份出现而效果重复）。**未声明任何前置包**：它的核心盟约 `bondType` 是 `SEASON`（非 `SIDE_STORY`），
 与 `workshop/side-story/` 那套故事集接口**无关**。存在一处**跨包软耦合**：盟约成员含 `chess_char_5_25_a`（若叶睦），该棋子由
 `workshop/ave-mujica/` 定义、但共用本包素材；策略文案自带说明「在【雷姆必拓】部分干员缺席时体验可能不完整」。
@@ -61,11 +61,11 @@
 
 - **阈值效果**（`bb`：`power_bond_char_cnt: 3`、`ex_bond_char_cnt: 6`）：
   - **≥3 名不同**：最后上场的 1 名【雷姆必拓】干员获得「开拓心」。场上每存在 1 位不重复的【雷姆必拓】干员，持有者**受到伤害 −5%**
-    （`taken_reduce: 0.05`）；持有者**生命上限 +20%**（`hp: 0.2`，每层 `hp_per_stack: 0.005`，即 +0.5%/层）；
-    攻击时额外附带 **5% 生命上限的真实伤害**（`true_dmg: 0.05`，每层 `true_dmg_per_stack: 0.001`）。
+    （`taken_reduce: 0.05`）；持有者**生命上限 +25%**（`hp: 0.25`，每层 `hp_per_stack: 0.0025`，即 +0.25%/层）；
+    攻击时额外附带 **5% 生命上限的真实伤害**（`true_dmg: 0.05`，每层 `true_dmg_per_stack: 0.0005`）。
   - **≥6 名不同**：场上【雷姆必拓】干员获得等同于「开拓心」持有者 **25% 生命上限的攻击**（`atk_hp_share: 0.25`，加算/固定值）。
 - **层数轴怎么涨**：核心盟约走引擎既有的「发层」通路（策略 / 卡 / 特质）。包内 `spec.layerGain` 注记 *“Economy-driven: sources that
-  grant layers (strategies / cards) apply like every other core bond.”* 本包自带的层数来源见 §6：**黑** 获得时 +5（精锐 +10）、
+  grant layers (strategies / cards) apply like every other core bond.”* 本包自带的层数来源见 §6：**黑** 获得时 +3（精锐 +6）、
   **蜜莓** 休整期每名不同成员 +2（精锐 +4）、**霜叶** 开技能 +1（精锐 +2）。
 - **持有者规则**（`battle/main.mjs`）：以**休整期最后摆上场**的雷姆必拓成员为初始持有者（引擎把整盘摆放序写进 `input.placementOrder`，
   包从后往前找），战斗中再部署才更新「最后上场」；持有者阵亡时交给场上最后上场的存活成员。
@@ -180,12 +180,12 @@
 | `garrison_167_b` | 暴行（精锐） | IN_BATTLE | 同上 | 同上，获得 2 名 |
 | `garrison_167_prep_a` | 暴行（普通） | SERVER_PREP_START | `SERVER_GRANT_NO_REDEPLOY_CHAR`（本包 meta） | 进入休整期时获得 1 名阶级 ≤ 调度中心的【雷姆必拓】干员 |
 | `garrison_167_prep_b` | 暴行（精锐） | SERVER_PREP_START | 同上 | 获得 2 名 |
-| `garrison_168_a` | 蜜莓（普通） | SERVER_PREP_START | `SERVER_ADD_ACT_BOND_LAYER_BY_BOARD_BOND_CHAR`（本包 meta） | 场上每有 1 名不同的【雷姆必拓】干员，使所有已激活盟约层数 +2（`count:2`，不重复） |
-| `garrison_168_b` | 蜜莓（精锐） | SERVER_PREP_START | 同上 | 每名不同成员 +4 |
-| `garrison_166_a` | 黑（普通） | SERVER_GAIN | `SERVER_ADD_BOND_CHESS_ALL`（官方） | 获得时自身所属盟约层数 +5（无需激活盟约） |
-| `garrison_166_b` | 黑（精锐） | SERVER_GAIN | 同上 | +10 |
-| `garrison_165_a` | 阿米娅（普通） | IN_BATTLE | `SERVER_EXTRA_TRIGGER_BATTLE_EFFECT`（本包） | 其他干员触发的「战斗中」类效果额外触发 1 次（每名干员最多 2 次） |
-| `garrison_165_b` | 阿米娅（精锐） | IN_BATTLE | 同上 | 额外触发 2 次，最多 4 次 |
+| `garrison_168_a` | 蜜莓（普通） | SERVER_PREP_START | `SERVER_ADD_ACT_BOND_LAYER_BY_BOARD_BOND_CHAR`（本包 meta） | 场上每有 1 名不同的【雷姆必拓】干员，使所有已激活盟约层数 +2（`count:2`；不会重复触发同一盟约，两名【雷姆必拓】只 +2 一次） |
+| `garrison_168_b` | 蜜莓（精锐） | SERVER_PREP_START | 同上 | 每名不同成员 +4（`count:4`；不会重复触发同一盟约） |
+| `garrison_166_a` | 黑（普通） | SERVER_GAIN | `SERVER_ADD_BOND_CHESS_ALL`（官方） | 获得时自身所属盟约层数 +3（无需激活盟约） |
+| `garrison_166_b` | 黑（精锐） | SERVER_GAIN | 同上 | +6 |
+| `garrison_165_a` | 阿米娅（普通） | IN_BATTLE | `SERVER_EXTRA_TRIGGER_BATTLE_EFFECT`（本包） | 其他干员触发的「战斗中」类效果额外触发 1 次（每名干员最多 1 次） |
+| `garrison_165_b` | 阿米娅（精锐） | IN_BATTLE | 同上 | 额外触发 2 次，最多 1 次 |
 | `garrison_163_a` | 莱伊（普通） | IN_BATTLE | `SERVER_COPY_FRONT_EFFECT_BATTLE`（本包） | 战斗开始时复制**身前一格**其他干员的「战斗中」类效果（`front_count:1`） |
 | `garrison_163_b` | 莱伊（精锐） | IN_BATTLE | 同上 | 复制身前两格内（`front_count:2`） |
 | `garrison_162_a` | 珊比（普通） | IN_BATTLE | `act_gar_eff_takenReduceByBond`（本包 reader） | 【雷姆必拓】每叠加 1 层，本干员受到伤害 −0.1%（`divide_num:1`,`taken_reduce:0.001`） |
@@ -250,6 +250,10 @@
 | `itemIcons` | `trap_2001_mod_happy`、`trap_2002_mod_greens` → `item/*.png` |
 | `skins`（4） | `boc-frostl`｜破冰｜`char_193_frostl`；`sale-savage`｜又一年秋季｜`char_230_savage`；`nian-glider`｜洇灵雨｜`char_449_glider`；`sale-amiya3`｜寰宇独奏｜`char_1037_amiya3` |
 | `voices` / `voiceLangs` | jp 语音 5 名（含 `char_4183_mortis`）；cn/en/kr 各 4 名（不含 mortis） |
+
+> `art.chars` 的 Spine 动作映射（`anims`）已由项目 Spine 管线（`tools/assets/skel.mjs` + `tools/assets/anim-roles.mjs`）
+> 对真实 `.skel` 重算：修掉了 `skill`/`skills` 退化成 `Attack` 的旧值（暴行 / 滑翔 / 近卫阿米娅 曾因此在开技能时只播普攻动作）。
+> 霜叶的官方小人（本体与破冰时装）本身没有技能片段，`skill` 维持官方回退（借攻击片段）。
 
 **落盘目录约定**（`assets/` 下，随包根相对路径，如 `char/avatar/…`）：`char/avatar`、`char/portrait`、`spine/op/<char>/{front,back}`、
 `skin/op/<char>/{front,back}`、`skill`、`voice/{cn,en,jp,kr}/<char>`、`band`、`bond`、`item`。
